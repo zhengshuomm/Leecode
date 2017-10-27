@@ -1,0 +1,29 @@
+//Design a Tic-tac-toe game that is played between two players on a n x n grid.
+//
+//You may assume the following rules:
+//
+//A move is guaranteed to be valid and is placed on an empty block.
+//Once a winning condition is reached, no more moves is allowed.
+//A player who succeeds in placing n of their marks in a horizontal, vertical, or diagonal row wins the game.
+//Example:
+//Given n = 3, assume that player 1 is "X" and player 2 is "O" in the board.
+
+//http://www.cnblogs.com/grandyang/p/5467118.html
+public class Design_Tic_Tac_Toe_348 {
+	public:
+	    /** Initialize your data structure here. */
+	    TicTacToe(int n): rows(n), cols(n), N(n), diag(0), rev_diag(0) {}
+
+	    int move(int row, int col, int player) {
+	        int add = player == 1 ? 1 : -1;
+	        rows[row] += add; 
+	        cols[col] += add;
+	        diag += (row == col ? add : 0);
+	        rev_diag += (row == N - col - 1 ? add : 0);
+	        return (abs(rows[row]) == N || abs(cols[col]) == N || abs(diag) == N || abs(rev_diag) == N) ? player : 0;
+	    }
+
+	private:
+	    vector<int> rows, cols;
+	    int diag, rev_diag, N;
+}

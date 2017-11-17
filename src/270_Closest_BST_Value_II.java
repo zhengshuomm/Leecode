@@ -19,29 +19,38 @@ Try to assume that each node has a parent pointer, it makes the problem much eas
 Without parent pointer we just need to keep track of the path from the root to the current node using a stack.
 You would need two stacks to track the path in finding predecessor and successor node separately.*/
 public class Closest_BST_Value_II_270 {
-	/* 1 class Solution {
-		 2 public:
-		 3     vector<int> closestKValues(TreeNode* root, double target, int k) {
-		 4         vector<int> closest(k);
-		 5         stack<int> pre, suc;
-		 6         inorder(root, target, false, pre);
-		 7         inorder(root, target, true, suc);
-		 8         for (int i = 0; i < k; i++) {
-		 9             if (pre.empty()) closest[i] = suc.top(), suc.pop();
-		10             else if (suc.empty()) closest[i] = pre.top(), pre.pop();
-		11             else if (abs(target - pre.top()) < abs(target - suc.top()))
-		12                 closest[i] = pre.top(), pre.pop();
-		13             else closest[i] = suc.top(), suc.pop();
-		14         }
-		15         return closest;
-		16     }
-		17 private:
-		18     void inorder(TreeNode* root, double target, bool reversed, stack<int>& s) {
-		19         if (!root) return;
-		20         inorder(reversed ? root -> right : root -> left, target, reversed, s);
-		21         if ((reversed && root -> val <= target) || (!reversed && root -> val > target)) return;
-		22         s.push(root -> val);
-		23         inorder(reversed ? root -> left : root -> right, target, reversed, s);
-		24     }
-		25 };*/
+	public List<Integer> closestKValues(TreeNode root, double target, int k) {
+		  List<Integer> res = new ArrayList<>();
+
+		  Stack<Integer> s1 = new Stack<>(); // predecessors
+		  Stack<Integer> s2 = new Stack<>(); // successors
+
+		  inorder(root, target, false, s1);
+		  inorder(root, target, true, s2);
+		  
+		  while (k-- > 0) {
+		    if (s1.isEmpty())
+		      res.add(s2.pop());
+		    else if (s2.isEmpty())
+		      res.add(s1.pop());
+		    else if (Math.abs(s1.peek() - target) < Math.abs(s2.peek() - target))
+		      res.add(s1.pop());
+		    else
+		      res.add(s2.pop());
+		  }
+		  
+		  return res;
+		}
+
+		// inorder traversal
+		void inorder(TreeNode root, double target, boolean reverse, Stack<Integer> stack) {
+		  if (root == null) return;
+
+		  inorder(reverse ? root.right : root.left, target, reverse, stack);
+		  // early terminate, no need to traverse the whole tree
+		  if ((reverse && root.val <= target) || (!reverse && root.val > target)) return;
+		  // track the value of current node
+		  stack.push(root.val);
+		  inorder(reverse ? root.left : root.right, target, reverse, stack);
+		}
 }

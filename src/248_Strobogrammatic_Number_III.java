@@ -6,43 +6,37 @@ For example,
 
 Given low = "50", high = "100", return 3. Because 69, 88, and 96 are three strobogrammatic numbers.*/
 public class Strobogrammatic_Number_III_248 {
-//	¸´ÖÆ´úÂë
-//	 1 class Solution {
-//	 2 public:
-//	 3     Solution() {
-//	 4         mp = {{'0', '0'}, {'1', '1'}, {'6', '9'}, {'8', '8'}, {'9', '6'}};
-//	 5     }
-//	 6     
-//	 7     int strobogrammaticInRange(string low, string high) {
-//	 8         int ans = 0, l = low.length(), u = high.length();
-//	 9         for (int i = l; i <= u; i++) {
-//	10             string temp(i, ' ');
-//	11             strobogrammaticCount(temp, ans, low, high, 0, i - 1);
-//	12         }
-//	13         return ans;
-//	14     }
-//	15 private:
-//	16     unordered_map<char, char> mp;
-//	17     void strobogrammaticCount(string temp, int& ans, string& low, string& high, int lo, int hi) {
-//	18         if (lo > hi) {
-//	19             if ((temp[0] != '0' || temp.length() == 1) && less(low, temp) && less(temp, high))
-//	20                 ans++;
-//	21             return;
-//	22         }
-//	23         for (auto m : mp) {
-//	24             temp[lo] = m.first;
-//	25             temp[hi] = m.second;
-//	26             if ((lo == hi && m.first == m.second) || lo < hi)
-//	27                 strobogrammaticCount(temp, ans, low, high, lo + 1, hi - 1);
-//	28         }
-//	29     }
-//	30     bool less(string& s, string& t) {
-//	31         int m = s.length(), n = t.length(), i;
-//	32         if (m != n) return m < n;
-//	33         for (i = 0; i < m; i++)
-//	34             if (s[i] == t[i]) continue;
-//	35             else break;
-//	36         return i == m || s[i] < t[i];
-//	37     }
-//	38 };
+private static final char[][] pairs = {{'0', '0'}, {'1', '1'}, {'6', '9'}, {'8', '8'}, {'9', '6'}};
+
+public int strobogrammaticInRange(String low, String high) {
+    int[] count = {0};
+    for (int len = low.length(); len <= high.length(); len++) {
+        char[] c = new char[len];
+        dfs(low, high, c, 0, len - 1, count);
+    }
+    return count[0];
+}
+
+public void dfs(String low, String high , char[] c, int left, int right, int[] count) {
+    if (left > right) {
+        String s = new String(c);
+        if ((s.length() == low.length() && s.compareTo(low) < 0) || 
+            (s.length() == high.length() && s.compareTo(high) > 0)) {
+            return;
+        }
+        count[0]++;
+        return;
+    }
+    for (char[] p : pairs) {
+        c[left] = p[0];
+        c[right] = p[1];
+        if (c.length != 1 && c[0] == '0') {
+            continue;
+        }
+        if (left == right && p[0] != p[1]) {
+            continue;
+        }
+        dfs(low, high, c, left + 1, right - 1, count);
+    }
+}
 }

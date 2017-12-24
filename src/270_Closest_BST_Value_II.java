@@ -54,3 +54,25 @@ public class Closest_BST_Value_II_270 {
 		  inorder(reverse ? root.left : root.right, target, reverse, stack);
 		}
 }
+
+List<Integer> closestKValues(TreeNode root, double target, int k) {
+	List<Integer> result = new ArrayList<>();
+	if (root == null || k < 0) return result;
+	helper(root, target, k, result);
+	return result;
+}
+
+void helper(TreeNode node, double target, int k, List<Integer> result){
+	if (node == null) return;
+ 	helper(node.left, target, k, result);
+	if (result.size() < k) result.add(node.val);
+	else {
+		double diff = math.abs(target - node.val);
+		double oldDiff = Math.abs(target - result.get(0));
+		if (diff < oldDiff) {
+			result.remove(0);
+			result.add(node.val);
+		}else return;
+	}
+	helper(node.right, target, k, result);
+}

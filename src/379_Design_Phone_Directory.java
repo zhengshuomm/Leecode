@@ -6,6 +6,7 @@
 //check: Check if a number is available or not.
 //release: Recycle or release a number.
 public class Design_Phone_Directory_379 {
+	// https://discuss.leetcode.com/topic/53102/java-ac-solution-with-bitset-and-efficient-get-comments/3
 	Set<Integer> used = new HashSet<Integer>();
     Queue<Integer> available = new LinkedList<Integer>();
     int max;

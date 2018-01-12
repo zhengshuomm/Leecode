@@ -14,6 +14,7 @@ public class testPriorityQueue {
 		while (!queue.isEmpty()) {
 			System.out.println(queue.poll().id);
 		}
+		System.out.println(-9 % 10);
 	}
 
 }

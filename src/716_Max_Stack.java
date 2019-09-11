@@ -1,50 +1,57 @@
-// CAN ROTATE	
-public class number_of_distinct_islands_ii_711 {
-    map<int, vector<pair<int,int>>> mp;
-    
-    void dfs(int r, int c, vector<vector<int>> &g, int cnt) {
-        if ( r < 0 || c < 0 || r >= g.size() || c >= g[0].size()) return;
-        if (g[r][c] != 1) return;
-        g[r][c] = cnt;
-        mp[cnt].push_back({r,c});
-        dfs(r+1,c,g,cnt);
-        dfs(r-1,c,g,cnt);
-        dfs(r,c+1,g,cnt);
-        dfs(r,c-1,g,cnt);
-    }
-    
-    vector<pair<int,int>> norm(vector<pair<int,int>> v) {
-        vector<vector<pair<int,int>>> s(8);
-        // compute rotations/reflections.
-        for (auto p:v) {
-            int x = p.first, y = p.second;
-            s[0].push_back({x,y});
-            s[1].push_back({x,-y});
-            s[2].push_back({-x,y});
-            s[3].push_back({-x,-y});
-            s[4].push_back({y,-x});
-            s[5].push_back({-y,x});
-            s[6].push_back({-y,-x});
-            s[7].push_back({y,x});
-        }
-        for (auto &l:s) sort(l.begin(),l.end());
-        for (auto &l:s) {
-            for (int i = 1; i < v.size(); ++i) 
-                l[i] = {l[i].first-l[0].first, l[i].second - l[0].second};
-            l[0] = {0,0};
-        }
-        sort(s.begin(),s.end());
-        return s[0];
-    }
-    
-    int numDistinctIslands2(vector<vector<int>>& g) {
-        int cnt = 1;
-        set<vector<pair<int,int>>> s;
-        for (int i = 0; i < g.size(); ++i) for (int j = 0; j < g[i].size(); ++j) if (g[i][j] == 1) {
-            dfs(i,j,g, ++cnt);
-            s.insert(norm(mp[cnt]));
-        }
-        
-        return s.size();
-    }
-}
+//Design a max stack that supports push, pop, top, peekMax and popMax.
+//
+//push(x) -- Push element x onto stack.
+//pop() -- Remove the element on top of the stack and return it.
+//top() -- Get the element on the top.
+//peekMax() -- Retrieve the maximum element in the stack.
+//popMax() -- Retrieve the maximum element in the stack, and remove it. If you find more than one maximum elements, only remove the top-most one.
+
+class MaxStack {
+ 2     Stack<Integer> stk;
+ 3     Stack<Integer> maxStk;
+ 4     
+ 5     /** initialize your data structure here. */
+ 6     public MaxStack() {
+ 7         stk = new Stack<Integer>();
+ 8         maxStk = new Stack<Integer>();
+ 9     }
+10     
+11     public void push(int x) {
+12         stk.push(x);
+13         if(maxStk.isEmpty() || maxStk.peek()<=x){
+14             maxStk.push(x);
+15         }
+16     }
+17     
+18     public int pop() {
+19         int x = stk.pop();
+20         if(!maxStk.isEmpty() && x==maxStk.peek()){
+21             maxStk.pop();
+22         }
+23 
+24         return x;
+25     }
+26     
+27     public int top() {
+28         return stk.peek();
+29     }
+30     
+31     public int peekMax() {
+32         return maxStk.peek();
+33     }
+34     
+35     public int popMax() {
+36         Stack<Integer> tempStk = new Stack<Integer>();
+37         int x = maxStk.pop();
+38         while(!stk.isEmpty() && stk.peek()<x){
+39             tempStk.push(stk.pop());
+40         }
+41         
+42         stk.pop();
+43         while(!tempStk.isEmpty()){
+44             int top = tempStk.pop();
+45             push(top);
+46         }
+47         return x;       
+48     }
+49 }

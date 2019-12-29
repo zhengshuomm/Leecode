@@ -13,43 +13,34 @@ Given 2d vector =
 ]
 By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,2,3,4,5,6].*/
 public class Flatten_2D_Vector_251 {
-	 private int[] arrCounters;
-	    private int counter = 0;
-
-	    public Flatten_2D_Vector_251(List<List<Integer>> vec2d) {
-	        int cnt = 0;
-	        if (vec2d == null) {
-	            arrCounters = new int[0];
-	        } else {
-
-	            for (List<Integer> l : vec2d) {
-	                cnt += (l == null) ? 0 : l.size();
-	            }
-	            arrCounters = new int[cnt];
-
-	            cnt = 0;
-	            for (List<Integer> l : vec2d) {
-	                for (int in : l) {
-	                    arrCounters[cnt++] = in;
-	                }
+	 List<Integer> ans;
+	    int index;
+	    public Vector2D(int[][] v) {
+	        ans = new ArrayList<>();
+	        index = 0;
+	        for (int i = 0; i < v.length; i++){
+	            int[] temp = v[i];
+	            for (int j = 0; j < temp.length; j++){
+	                ans.add(temp[j]);
 	            }
 	        }
+	        
 	    }
-
+	    
 	    public int next() {
-	        int val = Integer.MIN_VALUE;
-	        if (counter < arrCounters.length) {
-	            val = arrCounters[counter];
+	        if (hasNext()){
+	            return ans.get(index++);
 	        }
-	        counter++;
-	        return val;
+	        return -1;
+	        
 	    }
-
+	    
 	    public boolean hasNext() {
-	        return counter < arrCounters.length;
+	        return index < ans.size();
+	        
 	    }
 	    
 	    
-	    // ²Î¼ûdeep iterator
+	    // ï¿½Î¼ï¿½deep iterator
 //	    http://www.mitbbs.com/article_t/JobHunting/32583985.html
 }

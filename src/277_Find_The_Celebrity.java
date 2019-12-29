@@ -5,22 +5,20 @@ Now you want to find out who the celebrity is or verify that there is not one. T
 You are given a helper function bool knows(a, b) which tells you whether A knows B. Implement a function int findCelebrity(n), your function should minimize the number of calls to knows.
 
 Note: There will be exactly one celebrity if he/she is in the party. Return the celebrity's label if there is a celebrity in the party. If there is no celebrity, return -1.
-*/public class Find_The_Celebrity_277 {
-	 /*1 // Forward declaration of the knows API.
-	 2 bool knows(int a, int b);
-	 3 
-	 4 class Solution {
-	 5 public:
-	 6     int findCelebrity(int n) {
-	 7         int l = 0, r = n - 1;
-	 8         while (l < r) {
-	 9             if (knows(l, r)) ++l;
-	10             else --r;
-	11         }
-	12         for (int i = 0; i < n; ++i) if (i != l) {
-	13             if (knows(l, i) || !knows(i, l)) return -1;
-	14         }
-	15         return l;
-	16     }
-	17 };*/
+ */public class Find_The_Celebrity_277 {
+	public int findCelebrity(int n) {
+		int l = 0, r = n - 1;
+		while (l < r) {
+			if (knows(l, r))
+				++l;
+			else
+				--r;
+		}
+		for (int i = 0; i < n; ++i)
+			if (i != l) {
+				if (knows(l, i) || !knows(i, l))
+					return -1;
+			}
+		return l;
+	}
 }

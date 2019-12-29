@@ -17,9 +17,7 @@ public class Verify_preorder_sequence_in_BST_255 {
 	            }  
 	            stack.push(preorder[i]);  
 	        } 
-	        if (stack.size() == 1)
-	        	return true;  
-	        return false;
+	        return !stack.isEmpty();
 	    }  
 	      
 	    // Method 1: brute force  

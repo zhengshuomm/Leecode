@@ -14,9 +14,7 @@ public class Binary_Tree_Longest_Consecutive_Sequence_298 {
         if(root == null){
             return length;
         }
-        // 判断当前是否连续
         int currLen = preVal + 1 == root.val ? length + 1 : 1;
-        // 返回当前长度，左子树长度，和右子树长度中较大的那个
         return Math.max(currLen, Math.max(findLongest(root.left, currLen, root.val), findLongest(root.right, currLen, root.val)));  
     }
 }

@@ -6,42 +6,45 @@
 //In the following examples, the input tree is represented in flattened form row by row. The actual root tree given will be a TreeNode object.
 
 // parent 孩子 或者是自己的孩子
-int answer;
+class Solution {
+    public int findClosestLeaf(TreeNode root, int k) {
+        Map<TreeNode, List<TreeNode>> graph = new HashMap();
+        dfs(graph, root, null);
 
-public int findClosest(TreeNode root, int key) {
-    answer = Integer.MAX_VALUE;
-    helper(root, key, new ArrayList<TreeNode>());
-    return answer;
-}
+        Queue<TreeNode> queue = new LinkedList();
+        Set<TreeNode> seen = new HashSet();
 
-private void helper(TreeNode node, int key, List<TreeNode> path) {
-    if (node == null) {
-        return;
-    } else if (node.val != key) {
-        path.add(node);
-        helper(node.left, key, path);
-        helper(node.right, key, path);
-        path.remove(path.size() - 1);
-    } else {
-        // key matches with current node value
-        answer = lenToLowerLeaf(node);
-        // answer initially = cloest leaf from lower
-
-        int len = path.size();
-        for (int i = 0; i < len; i++) {
-            // for every ancestor, calculate distance and compare
-            int ithToLowerLeaf = lenToLowerLeaf(path.get(i));
-            answer = Math.min(answer, (len - i) + ithToLowerLeaf);
+        for (TreeNode node: graph.keySet()) {
+            if (node != null && node.val == k) {
+                queue.add(node);
+                seen.add(node);
+            }
         }
-    }
-}
 
-private int lenToLowerLeaf(TreeNode node) {
-    if (node == null) {
-        return Integer.MAX_VALUE;
-    } else if (node.left == null && node.right == null) {
-        return 0;
-    } else {
-        return 1 + Math.min(lenToLowerLeaf(node.left), lenToLowerLeaf(node.right));
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node != null) {
+                if (graph.get(node).size() <= 1)
+                    return node.val;
+                for (TreeNode nei: graph.get(node)) {
+                    if (!seen.contains(nei)) {
+                        seen.add(nei);
+                        queue.add(nei);
+                    }
+                }
+            }
+        }
+        throw null;
+    }
+
+    public void dfs(Map<TreeNode, List<TreeNode>> graph, TreeNode node, TreeNode parent) {
+        if (node != null) {
+            if (!graph.containsKey(node)) graph.put(node, new LinkedList<TreeNode>());
+            if (!graph.containsKey(parent)) graph.put(parent, new LinkedList<TreeNode>());
+            graph.get(node).add(parent);
+            graph.get(parent).add(node);
+            dfs(graph, node.left, node);
+            dfs(graph, node.right, node);
+        }
     }
 }

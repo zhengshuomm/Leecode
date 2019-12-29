@@ -32,18 +32,19 @@ public class Generalized_Abbreviation_320 {
     
     
     // Method 2. DFS
-    vector<string> generateAbbreviations(string word) {
-        vector<string> res;
+    public List<String> generateAbbreviations(String word) {
+        List<String> res = new ArrayList<>();
         helper(word, 0, 0, "", res);
         return res;
     }
-    void helper(string word, int pos, int cnt, string out, vector<string> &res) {
-        if (pos == word.size()) {
-            if (cnt > 0) out += to_string(cnt);
-            res.push_back(out);
+    
+    void helper(String word, int pos, int cnt, String out,  List<String> res) {
+        if (pos == word.length()) {
+            if (cnt > 0) out += cnt;
+            res.add(out);
         } else {
             helper(word, pos + 1, cnt + 1, out, res);
-            helper(word, pos + 1, 0, out + (cnt > 0 ? to_string(cnt) : "") + word[pos], res);
+            helper(word, pos + 1, 0, out + (cnt > 0 ? cnt : "") + word.charAt(pos), res);
         }
     }
 }

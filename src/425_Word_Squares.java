@@ -1,6 +1,6 @@
 //Given a set of words (without duplicates), find all word squares you can build from them.
 //
-//A sequence of words forms a valid word square if the kth row and column read the exact same string, where 0 ¡Ü k < max(numRows, numColumns).
+//A sequence of words forms a valid word square if the kth row and column read the exact same string, where 0 ï¿½ï¿½ k < max(numRows, numColumns).
 //
 //For example, the word sequence ["ball","area","lead","lady"] forms a word square because each word reads the same both horizontally and vertically.
 //
@@ -15,81 +15,95 @@
 //Word length is at least 1 and at most 5.
 //Each word contains only lowercase English alphabet a-z.
 public class Word_Squares_425 {
-	public class Solution {
+	class Solution {
 	    class TrieNode {
-	        List<String> startWith;
 	        TrieNode[] children;
-
+	        boolean isWord;
+	        
 	        TrieNode() {
-	            startWith = new ArrayList<>();
 	            children = new TrieNode[26];
 	        }
 	    }
-
-	    class Trie {
-	        TrieNode root;
-
-	        Trie(String[] words) {
-	            root = new TrieNode();
-	            for (String w : words) {
-	                TrieNode cur = root;
-	                for (char ch : w.toCharArray()) {
-	                    int idx = ch - 'a';
-	                    if (cur.children[idx] == null)
-	                        cur.children[idx] = new TrieNode();
-	                    cur.children[idx].startWith.add(w);
-	                    cur = cur.children[idx];
-	                }
-	            }
-	        }
-
-	        List<String> findByPrefix(String prefix) {
-	            List<String> ans = new ArrayList<>();
-	            TrieNode cur = root;
-	            for (char ch : prefix.toCharArray()) {
-	                int idx = ch - 'a';
-	                if (cur.children[idx] == null)
-	                    return ans;
-
-	                cur = cur.children[idx];
-	            }
-	            ans.addAll(cur.startWith);
-	            return ans;
-	        }
-	    }
-
+	    
 	    public List<List<String>> wordSquares(String[] words) {
-	        List<List<String>> ans = new ArrayList<>();
-	        if (words == null || words.length == 0)
-	            return ans;
-	        int len = words[0].length();
-	        Trie trie = new Trie(words);
-	        List<String> ansBuilder = new ArrayList<>();
-	        for (String w : words) {
-	            ansBuilder.add(w);
-	            search(len, trie, ans, ansBuilder);
-	            ansBuilder.remove(ansBuilder.size() - 1);
+	        TrieNode root = buildTrie(words);
+	        List<List<String>> squares = new ArrayList<>();
+	        
+	        for (String word : words) {
+	            List<String> square = new ArrayList<>();
+	            square.add(word);
+	            wordSquares(root, word.length(), square, squares);
 	        }
-
-	        return ans;
+	        return squares;
 	    }
-
-	    private void search(int len, Trie tr, List<List<String>> ans,
-	            List<String> ansBuilder) {
-	        if (ansBuilder.size() == len) {
-	            ans.add(new ArrayList<>(ansBuilder));
+	    
+	    private TrieNode buildTrie(String[] words) {
+	        TrieNode root = new TrieNode();
+	        for (String word : words) {
+	            TrieNode current = root;
+	            for (char c : word.toCharArray()) {
+	                int index = c - 'a';
+	                if (current.children[index] == null) {
+	                    current.children[index] = new TrieNode();
+	                }
+	                current = current.children[index];
+	            }
+	            current.isWord = true;
+	        }
+	        return root;
+	    }
+	    
+	    private TrieNode search(TrieNode root, String prefix) {
+	        TrieNode current = root;
+	        for (char c : prefix.toCharArray()) {
+	            int index = c - 'a';
+	            if (current.children[index] == null) {
+	                return null;
+	            }
+	            current = current.children[index];
+	        }
+	        return current;
+	    }
+	    
+	    private void wordSquares(TrieNode root, int len, List<String> square, List<List<String>> squares) {
+	        if (square.size() == len) {
+	            squares.add(new ArrayList<>(square));
 	            return;
 	        }
 
-	        int idx = ansBuilder.size();
-	        StringBuilder prefixBuilder = new StringBuilder();
-	        for (String s : ansBuilder)
-	            prefixBuilder.append(s.charAt(idx));
-	        List<String> startWith = tr.findByPrefix(prefixBuilder.toString());
-	        for (String sw : startWith) {
-	            ansBuilder.add(sw);
-	            search(len, tr, ans, ansBuilder);
-	            ansBuilder.remove(ansBuilder.size() - 1);
+	        String prefix = getPrefix(square, square.size());
+	        TrieNode node = search(root, prefix);
+	        if (node == null) {
+	            return;
+	        }
+	        
+	        List<String> children = new ArrayList<>();
+	        getChildren(node, prefix, children);
+	        for (String child : children) {
+	            square.add(child);
+	            wordSquares(root, len, square, squares);
+	            square.remove(square.size() - 1);
+	        }
+	    }
+	    
+	    private String getPrefix(List<String> square, int index) {
+	        StringBuilder sb = new StringBuilder();
+	        for (int i = 0; i < index; i++) {
+	            sb.append(square.get(i).charAt(index));
+	        }
+	        return sb.toString();
+	    }
+	    
+	    private void getChildren(TrieNode node, String s, List<String> children) {
+	        if (node.isWord) {
+	            children.add(s);
+	            return;
+	        }
+	        
+	        for (int i = 0; i < 26; i++) {
+	            if (node.children[i] != null) {
+	                getChildren(node.children[i], s + (char) ('a' + i), children);
+	            }
 	        }
 	    }
 	}

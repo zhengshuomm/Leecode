@@ -13,19 +13,16 @@ For example, given s = "++++", after one move, it may become one of the followin
 
 If there is no valid move, return an empty list [].*/
 public class Flip_Game_293 {
-	/*class Solution {
-		public:
-		    vector<string> generatePossibleNextMoves(string s) {
-		        vector<string> moves;
-		        int n = s.length();
-		        for (int i = 0; i < n - 1; i++) {
-		            if (s[i] == '+' && s[i + 1] == '+') { 
-		                s[i] = s[i + 1] = '-';
-		                moves.push_back(s);
-		                s[i] = s[i + 1] = '+';
-		            }
-		        }
-		        return moves;
-		    }
-		};*/
+	public List<String> generatePossibleNextMoves(String s) {
+        List<String> result = new ArrayList<>();
+        char[] str = s.toCharArray();
+        for (int i = 0 ; i < str.length -1 ; i ++) {
+            if (str[i] == '+' && str[i + 1] == '+') {
+                str[i] = str[i+1] = '-';
+                result.add(new String(str));
+                str[i] = str[i+1] = '+';
+            }
+        }
+        return result;
+    }
 }

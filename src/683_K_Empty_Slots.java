@@ -13,17 +13,49 @@ public class K_Empty_Slots_683 {
 //	We just need to find a subarray days[left, left+1,..., left+k-1, right] which satisfies: 
 //	for any i = left+1,..., left+k-1, we can have days[left] < days[i] && days[right] < days[i]. 
 //	Then, the result is max(days[left], days[right]).
-	public int kEmptySlots(int[] flowers, int k) {
-        int[] days =  new int[flowers.length];
-        for(int i=0; i<flowers.length; i++)days[flowers[i] - 1] = i + 1;
-        int left = 0, right = k + 1, res = Integer.MAX_VALUE;
-        for(int i = 0; right < days.length; i++){
-            if(days[i] < days[left] || days[i] <= days[right]){
-                if(i == right)res = Math.min(res, Math.max(days[left], days[right]));   //we get a valid subarray
-                left = i; 
-                right = k + 1 + i;
+    public int kEmptySlots(int[] flowers, int k) {
+        TreeSet<Integer> active = new TreeSet();
+        int day = 0;
+        for (int flower: flowers) {
+            day++;
+            active.add(flower);
+            Integer lower = active.lower(flower);
+            Integer higher = active.higher(flower);
+            if (lower != null && flower - lower - 1 == k ||
+                    higher != null && higher - flower - 1 == k)
+                return day;
+        }
+        return -1;
+    }
+    
+    // days index表示第几个flower， days[i] 表示第几天开
+    int[] days = new int[flowers.length + 1];
+    for (int i = 0; i < flowers.length; i++) {
+        days[flowers[i]] = i + 1;
+    }
+ 
+    int result = Integer.MAX_VALUE;
+ 
+    for (int i = 1; i < days.length - k - 1; i++) {
+        int l = days[i];
+        int r = days[i + k + 1];
+ 
+        int max = Math.max(l, r);
+        int min = Math.min(l, r);
+ 
+ 
+        boolean flag = true;
+        for (int j = 1; j <= k; j++) {
+            if (days[i + j] < max) {
+                flag = false;
+                break;
             }
         }
-        return (res == Integer.MAX_VALUE)?-1:res;
+ 
+        if (flag && max < result) {
+            result = max;
+        }
     }
+ 
+    return result == Integer.MAX_VALUE ? -1 : result;
 }

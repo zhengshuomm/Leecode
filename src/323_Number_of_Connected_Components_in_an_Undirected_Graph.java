@@ -24,13 +24,12 @@
 //
 //You can assume that no duplicate edges will appear in edges. Since all edges are undirected, [0, 1] is the same as [1, 0] and thus will not appear together in edges.
 public class Number_of_Connected_Components_in_an_Undirected_Graph_323 {
-	public:
-	    int countComponents(int n, vector<pair<int, int> >& edges) {
+	 public int countComponents(int n, int[][] edges) {
 	        int res = n;
-	        vector<int> root(n);
+	        int[] root = new int[n];
 	        for (int i = 0; i < n; ++i) root[i] = i;
-	        for (auto a : edges) {
-	            int x = find(root, a.first), y = find(root, a.second);
+	        for (int[] e : edges) {
+	            int x = find(root, e[0]), y = find(root, e[1]);
 	            if (x != y) {
 	                --res;
 	                root[y] = x;
@@ -38,7 +37,8 @@ public class Number_of_Connected_Components_in_an_Undirected_Graph_323 {
 	        }
 	        return res;
 	    }
-	    int find(vector<int> &root, int i) {
+	    
+	    int find(int[] root, int i) {
 	        while (root[i] != i) i = root[i];
 	        return i;
 	    }

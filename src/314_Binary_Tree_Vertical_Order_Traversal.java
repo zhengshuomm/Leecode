@@ -4,6 +4,7 @@ If two nodes are in the same row and column, the order should be from left to ri
 public class Binary_Tree_Vertical_Order_Traversal_314 {
 	// http://www.cnblogs.com/yrbbest/p/5065457.html
 	// https://discuss.leetcode.com/topic/31954/5ms-java-clean-solution\
+	// 可以只用一个queue
 	public List<List<Integer>> verticalOrder(TreeNode root) {
 	    List<List<Integer>> res = new ArrayList<>();
 	    if (root == null) {
@@ -47,5 +48,6 @@ public class Binary_Tree_Vertical_Order_Traversal_314 {
 	    }
 
 	    return res;
+	   // https://leetcode.ca/2016-10-09-314-Binary-Tree-Vertical-Order-Traversal/
 	}
 }

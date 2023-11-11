@@ -28,3 +28,21 @@ class Solution {
         dfs(node.right);
     }
 }
+
+    public void inorderTraversal(Node root) {
+        Stack<Node> stack = new Stack<Node>();
+        Node node = root;
+        Node prevNode = null;
+        while (!stack.isEmpty() || node != null) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+            Node visitNode = stack.pop();
+            visitNode.left = prevNode;
+            if (prevNode != null)
+                prevNode.right = visitNode;
+            node = visitNode.right;
+            prevNode = visitNode;
+        }
+    }

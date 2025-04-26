@@ -14,27 +14,42 @@ class Node {
 */
 class Solution {
     public Node insert(Node head, int insertVal) {
-        if(head == null) {
-            Node n = new Node(insertVal, null);
-            n.next = n;
-            return n;
+        Node newNode = new Node(insertVal);
+
+        // 空链表：创建一个单节点自环
+        if (head == null) {
+            newNode.next = newNode;
+            return newNode;
         }
-        Node temp = head, maxNode = null;
-        int max = 0;
-        while (temp != maxNode) {
-            if (temp.val <= insertVal && temp.next.val >= insertVal) {
-                temp.next = new Node(insertVal, temp.next);
-                return head;
+
+        Node prev = head;
+        Node curr = head.next;
+
+        while (true) {
+            // 1. 插入在升序中间
+            if (prev.val <= insertVal && insertVal <= curr.val) {
+                break;
             }
-            // 考虑相等的情况temp.next.val < temp.val
-            if(max < temp.val || temp.next.val < temp.val){
-                max = temp.val;
-                maxNode = temp;
+
+            // 2. 断点处（最大 -> 最小）
+            if (prev.val > curr.val) {
+                if (insertVal >= prev.val || insertVal <= curr.val) {
+                    break;
+                }
             }
-            temp = temp.next;
+
+            prev = curr;
+            curr = curr.next;
+
+            // 3. 全都一样，或绕了一圈没找到合适点
+            if (prev == head) {
+                break;
+            }
         }
-        // 插入的是一个最小值 或者是最大值
-        temp.next = new Node(insertVal, temp.next);
+
+        // 插入节点
+        prev.next = newNode;
+        newNode.next = curr;
         return head;
     }
 }
